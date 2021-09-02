@@ -27,7 +27,8 @@ DefinitionBlock ("Dsdt.aml", "DSDT", 1, "INTEL ", "SIMICS  ", 4) {
     // PCI Root Bridge
     //
     Device (PCI0) {
-      Name (_HID, EISAID ("PNP0A03"))
+      Name (_HID, EISAID("PNP0A08")) // PCI Express Root Bridge
+      Name (_CID, EISAID("PNP0A03")) // Compatible PCI Root Bridge
       Name (_ADR, 0x00000000)
       Name (_BBN, 0x00)
       Name (_UID, 0x00)
@@ -35,6 +36,7 @@ DefinitionBlock ("Dsdt.aml", "DSDT", 1, "INTEL ", "SIMICS  ", 4) {
 
       // Current resource settings
       Name (_CRS, ResourceTemplate () {
+
         WORDBusNumber (          // Bus number resource (0); the bridge produces bus numbers for its subsequent buses
           ResourceProducer,      // bit 0 of general flags is 1
           MinFixed,              // Range is fixed
@@ -47,6 +49,20 @@ DefinitionBlock ("Dsdt.aml", "DSDT", 1, "INTEL ", "SIMICS  ", 4) {
           0x0100                 // Range Length = Max-Min+1
           )
 
+          QWordMemory (        // 64-bit BAR Windows
+            ResourceProducer,
+            PosDecode,
+            MinFixed,
+            MaxFixed,
+            Cacheable,
+            ReadWrite,
+            0x00000000,        // Granularity
+            0x500000000,       // Min Base Address
+            0x7FFFFFFFF,       // Max Base Address
+            0x00000000,        // Translate
+            0x300000000        // Length
+          )
+          
         IO (Decode16, 0xCF8, 0xCF8, 0x01, 0x08)       //Consumed resource (0xCF8-0xCFF)
 
         WORDIO (                 // Consumed-and-produced resource (all I/O below CF8)
@@ -105,6 +121,7 @@ DefinitionBlock ("Dsdt.aml", "DSDT", 1, "INTEL ", "SIMICS  ", 4) {
           ,                      // ResourceSource
           PW32                   // DescriptorName
           )
+
       })
 
       //
