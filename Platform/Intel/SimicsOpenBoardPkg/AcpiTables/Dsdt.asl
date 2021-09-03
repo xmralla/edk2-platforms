@@ -57,8 +57,8 @@ DefinitionBlock ("Dsdt.aml", "DSDT", 1, "INTEL ", "SIMICS  ", 4) {
             Cacheable,
             ReadWrite,
             0x00000000,        // Granularity
-            0x500000000,       // Min Base Address
-            0x7FFFFFFFF,       // Max Base Address
+            0x800000000,       // Min Base Address
+            0xaFFFFFFFF,       // Max Base Address
             0x00000000,        // Translate
             0x300000000        // Length
           )
